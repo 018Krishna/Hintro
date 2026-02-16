@@ -9,7 +9,7 @@ const INITIAL_DATA = {
     'todo': { id: 'todo', title: 'To Do', taskIds: [] },
     'doing': { id: 'doing', title: 'Doing', taskIds: [] },
     'done': { id: 'done', title: 'Done', taskIds: [] },
-  }, // Fixed columns [cite: 19]
+  }, 
   columnOrder: ['todo', 'doing', 'done'],
   activityLog: []
 };
@@ -17,7 +17,7 @@ const INITIAL_DATA = {
 export const TaskProvider = ({ children }) => {
   const [data, setData] = useState(INITIAL_DATA);
 
-  // Load from LocalStorage on mount [cite: 27]
+  // Load from LocalStorage 
   useEffect(() => {
     const savedData = localStorage.getItem('taskBoardData');
     if (savedData) {
@@ -25,7 +25,7 @@ export const TaskProvider = ({ children }) => {
     }
   }, []);
 
-  // Save to LocalStorage on change
+  // Save to LocalStorage
   useEffect(() => {
     localStorage.setItem('taskBoardData', JSON.stringify(data));
   }, [data]);
@@ -38,13 +38,13 @@ export const TaskProvider = ({ children }) => {
     };
     setData(prev => ({
       ...prev,
-      activityLog: [newLog, ...prev.activityLog].slice(0, 50) // Keep last 50
+      activityLog: [newLog, ...prev.activityLog].slice(0, 50) 
     }));
   };
 
   const addTask = (task) => {
     const id = uuidv4();
-    const newTask = { ...task, id, createdAt: new Date().toISOString() }; // [cite: 20]
+    const newTask = { ...task, id, createdAt: new Date().toISOString() }; 
     
     setData(prev => ({
       ...prev,
@@ -57,7 +57,7 @@ export const TaskProvider = ({ children }) => {
         }
       }
     }));
-    logActivity(`Created task "${task.title}"`); // [cite: 32]
+    logActivity(`Created task "${task.title}"`); 
   };
 
   const updateTask = (id, updatedFields) => {
@@ -65,7 +65,7 @@ export const TaskProvider = ({ children }) => {
       ...prev,
       tasks: { ...prev.tasks, [id]: { ...prev.tasks[id], ...updatedFields } }
     }));
-    logActivity(`Edited task "${updatedFields.title || 'Unknown'}"`); // [cite: 33]
+    logActivity(`Edited task "${updatedFields.title || 'Unknown'}"`); 
   };
 
   const deleteTask = (taskId, columnId) => {
@@ -84,17 +84,17 @@ export const TaskProvider = ({ children }) => {
         columns: { ...prev.columns, [columnId]: newColumn }
       };
     });
-    logActivity('Deleted a task'); // [cite: 35]
+    logActivity('Deleted a task'); 
   };
 
   const resetBoard = () => {
-    if(window.confirm("Are you sure? This will delete all data.")) { // [cite: 29]
+    if(window.confirm("Are you sure? This will delete all data.")) { 
       setData(INITIAL_DATA);
       localStorage.removeItem('taskBoardData');
     }
   };
 
-  // Drag and Drop Logic
+ 
   const moveTask = (result) => {
     const { destination, source, draggableId } = result;
     if (!destination) return;
@@ -103,7 +103,7 @@ export const TaskProvider = ({ children }) => {
     const start = data.columns[source.droppableId];
     const finish = data.columns[destination.droppableId];
 
-    // Moving within same list
+    
     if (start === finish) {
       const newTaskIds = Array.from(start.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -117,7 +117,7 @@ export const TaskProvider = ({ children }) => {
       return;
     }
 
-    // Moving between lists
+  
     const startTaskIds = Array.from(start.taskIds);
     startTaskIds.splice(source.index, 1);
     const newStart = { ...start, taskIds: startTaskIds };
@@ -130,7 +130,7 @@ export const TaskProvider = ({ children }) => {
       ...prev,
       columns: { ...prev.columns, [newStart.id]: newStart, [newFinish.id]: newFinish }
     }));
-    logActivity(`Moved task to ${finish.title}`); // [cite: 34]
+    logActivity(`Moved task to ${finish.title}`); 
   };
 
   return (
