@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for 'Remember me'
+    // Check local storage 
     const storedUser = localStorage.getItem('taskUser');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -16,22 +16,22 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (email, password, remember) => {
-    // Hardcoded credentials [cite: 13]
+    // Hardcoded credentials 
     if (email === 'intern@demo.com' && password === 'intern123') {
       const userData = { email, name: 'Intern User' };
       setUser(userData);
       if (remember) {
-        localStorage.setItem('taskUser', JSON.stringify(userData)); // [cite: 15]
+        localStorage.setItem('taskUser', JSON.stringify(userData)); 
       }
       return { success: true };
     }
-    return { success: false, message: 'Invalid credentials' }; // [cite: 14]
+    return { success: false, message: 'Invalid credentials' }; 
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('taskUser');
-    window.location.href = '/'; // Simple redirect
+    window.location.href = '/';
   };
 
   return (
